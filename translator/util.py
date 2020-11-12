@@ -60,3 +60,11 @@ def translator_lazy_str(item):
         return ''
     else:
         return lazy(get_translation_for_key, str)(item)
+
+
+def get_formatted_translation(key: str, **kwargs) -> str:
+    translation = translator(key)
+    try:
+        return translation.format(**kwargs)
+    except KeyError:
+        return translation
