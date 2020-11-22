@@ -51,19 +51,14 @@ Quick start
 
 #. Create translation keys in your templates and models::
 
-	Examples:
-
 	Template::
-
-		{{ translator.a_key }}
+	{{ translator.a_key }}
 
 	models.py::
+	from translator.util import translator_lazy as _
 
-		from translator.util import translator_lazy as _
-		...
-
-		class Product(models.Model):
-		    name = models.TextField(verbose_name=_(u"a_key"))
+	class Product(models.Model):
+		name = models.TextField(verbose_name=_(u"a_key"))
 
 #. Visit the templates. The keys get collected lazy.
 
@@ -72,6 +67,25 @@ Quick start
 #. You can disable the translator by setting DJANGO_TRANSLATOR_ENABLED to False.
 
 #. Use a double underscore in your translation keys to make use of the filter in the admin (e.g. "header__title" creates a filter called "header"). If you need another separator, set it as DJANGO_TRANSLATOR_CATEGORY_SEPARATOR in your setting file.
+
+#. Example language switcher::
+
+	{% load i18n %} 
+	
+	<form action="{% url "set_language" %}" method="post"> 
+		{% csrf_token %} 
+		<input name="next" type="hidden" value="{{ redirect_to }}"> 
+		<select name="language" onchange="this.form.submit()"> 
+			{% get_current_language as LANGUAGE_CODE %} 
+			{% get_available_languages as LANGUAGES %} 
+			{% get_language_info_list for LANGUAGES as languages %} 
+			{% for language in languages %} 
+				<option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}> 
+					{{ language.name_translated }} 
+				</option> 
+			{% endfor %} 
+		</select> 
+	</form> 
 
 Project Home
 ------------
