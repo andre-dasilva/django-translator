@@ -49,16 +49,18 @@ Quick start
 	    'translator.context_processors.translator',
 	 )
 
-#. Create translation keys in your templates and models::
+#. Create translation keys in your templates and python files::
 
 	Template::
-	{{ translator.a_key }}
+		{{ translator.a_key }}
 
-	models.py::
-	from translator.util import translator_lazy as _
 
-	class Product(models.Model):
-		name = models.TextField(verbose_name=_(u"a_key"))
+	Python file::
+		from translator.util import translator_lazy as _
+		# or from translator.util import translator as _
+
+		class Product(models.Model):
+			name = models.TextField(verbose_name=_("a_key"))
 
 #. Visit the templates. The keys get collected lazy.
 
