@@ -8,9 +8,9 @@ Quick start
 -----------
 #. Install django-translator: ``pip install django-translator``
 
-#. Add ``django.middleware.locale.LocaleMiddleware`` to MIDDLEWARES.
+#. Add ``django.middleware.locale.LocaleMiddleware`` to MIDDLEWARES settings.
 
-#. Setup your languages::
+#. Setup your languages in your settings::
 
 	LANGUAGE_CODE = "de"
 
@@ -68,7 +68,19 @@ Quick start
 
 #. Use a double underscore in your translation keys to make use of the filter in the admin (e.g. "header__title" creates a filter called "header"). If you need another separator, set it as DJANGO_TRANSLATOR_CATEGORY_SEPARATOR in your setting file.
 
-#. Example language switcher::
+#. Define your urls like this::
+
+	from django.conf.urls.i18n import i18n_patterns
+	from django.contrib import admin
+	from django.urls import include, path
+
+	urlpatterns = i18n_patterns(
+		path('admin/', admin.site.urls),
+		path('i18n/', include('django.conf.urls.i18n')),
+		prefix_default_language=False,
+	)
+
+#. Example language switcher for your templates::
 
 	{% load i18n %} 
 	
