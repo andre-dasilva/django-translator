@@ -8,6 +8,18 @@ Quick start
 -----------
 #. Install django-translator: ``pip install django-translator``
 
+#. Add ``django.middleware.locale.LocaleMiddleware`` to MIDDLEWARES.
+
+#. Setup your languages::
+
+	LANGUAGE_CODE = "de"
+
+	LANGUAGES = [
+		('de', _('German')),
+		('en', _('English')),
+		('fr', _('French')),
+	]
+
 #. Add "translator, taggit, modeltranslation" to your INSTALLED_APPS setting. Please note that ``modeltranslation`` needs to be before ``django.contrib.admin``::
 
 	INSTALLED_APPS = (
@@ -37,7 +49,7 @@ Quick start
 	    'translator.context_processors.translator',
 	 )
 
-#. Create translation keys in your templates and models.
+#. Create translation keys in your templates and models::
 
 	Examples:
 
@@ -56,7 +68,6 @@ Quick start
 #. Visit the templates. The keys get collected lazy.
 
 #. Translate the keys in the admin.
-
 
 #. You can disable the translator by setting DJANGO_TRANSLATOR_ENABLED to False.
 
