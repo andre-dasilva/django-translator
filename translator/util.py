@@ -7,6 +7,7 @@ import hashlib
 import logging
 import six
 
+TAGS_SEPARATOR = getattr(settings, 'DJANGO_TRANSLATOR_CATEGORY_SEPARATOR', '___')
 
 def get_translation_for_key(item):
     from django.core.exceptions import ObjectDoesNotExist
@@ -26,6 +27,12 @@ def get_translation_for_key(item):
                 except ObjectDoesNotExist:
                     result = Translation(key=item)
                     result.description = item
+                    
+                    categories = item.split(TAGS_SEPARATOR, 1)
+                    if len(categories) > 1:
+                        category, _ = categories
+                        result.tags.add(category)
+
                     result.save()
                     result = result.description
                 cache.set(key, result)

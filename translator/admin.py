@@ -6,6 +6,7 @@ from modeltranslation.admin import TranslationAdmin
 
 from translator.models import Translation
 
+TAGS_SEPARATOR = getattr(settings, 'DJANGO_TRANSLATOR_CATEGORY_SEPARATOR', '___')
 CATEGORY_SEPARATOR = getattr(settings, 'DJANGO_TRANSLATOR_CATEGORY_SEPARATOR', '__')
 
 
@@ -15,7 +16,9 @@ class KeyFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         queryset = model_admin.model.objects.filter(key__contains=CATEGORY_SEPARATOR).values_list('key', flat=True)
-        unique_categories = {key.split(CATEGORY_SEPARATOR)[0] for key in queryset}
+        clean_keys = [key[key.find(TAGS_SEPARATOR) + len(TAGS_SEPARATOR):] for key in queryset if TAGS_SEPARATOR in key]
+
+        unique_categories = {key.split(CATEGORY_SEPARATOR)[0] for key in clean_keys}
         categories = sorted([key for key in unique_categories])
         return (
             (category, category) for category in categories
@@ -30,10 +33,10 @@ class KeyFilter(admin.SimpleListFilter):
 
 class TranslationAdministration(TranslationAdmin):
     list_filter = (KeyFilter, 'tags',)
-    search_fields = ['key', 'description', ]
+    search_fields = ['key', 'description', 'tags']
     ordering = ('key',)
-    list_display = ('key', 'description',)
-    list_editable = ('description',)
+    list_display = ('key', 'description', 'tags')
+    list_editable = ('description', 'tags')
 
 
 admin.site.register(Translation, TranslationAdministration)
